@@ -1,0 +1,55 @@
+{
+  "inbounds": [{
+    "port": 2019,
+    "protocol": "socks",
+    "sniffing": {
+    	"enabled": false,
+        "destOverride": ["http", "tls"]
+    },
+    "settings": {
+    	"auth": "noauth"
+    }
+  }],
+  "outbounds": [{
+    "protocol": "vmess",
+    "settings": {
+    	"vnext": [
+	    {
+		"address": "VPS的IP地址",
+		"port": 8080,
+		"users": [
+		    {
+			"id": "生成的UUID",
+			"alterId": 100
+		    }
+		]
+	    }
+	]
+    },
+    "mux": {
+	"enabled": true,
+	"concurrency": 8
+    }
+  },{
+    "protocol": "blackhole",
+    "settings": {},
+    "tag": "blocked"
+  }],
+  "routing": {
+    "domainStrategy": "IPOnDemand",
+    "rules": [
+      {
+        "type": "field",
+        "outboundTag": "direct",
+	"domain": ["geosite:cn"]
+      },{
+	"type": "field",
+        "outboundTag": "direct",
+        "ip": [
+          "geoip:cn",
+          "geoip:private"
+        ]
+      }
+    ]
+  }
+}
